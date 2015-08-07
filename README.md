@@ -3,7 +3,7 @@ A tiny python2.7 script which tries to convert LaTex projects into arXiv-format.
 
 ## Tasks:
 * The script creates an output folder,
-* parses through the input file and generates a new one in the output folder where it:
+* parses the input file and generates a new one in the output folder where it:
     * inserts the content of all imports (e.g., \import{foo}),
     * copies all graphics (e.g., \includegraphics{graphic}) source files into the same folder (enumerate them if two or more have the same name) and replaces the filename in the LaTex file with the new one.
     * Finally, it inserts the content of the .bbl file as bibliography (if the .bbl does not exist, it tries to compile it)
