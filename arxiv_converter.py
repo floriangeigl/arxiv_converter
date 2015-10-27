@@ -1,4 +1,4 @@
-__author__ = 'Florian Geigl'
+from __future__ import print_function
 import sys
 import os
 import shutil
@@ -8,7 +8,7 @@ from optparse import OptionParser
 
 
 def add_content_of_file(input_filename, output_file, output_folder, file_mapping, remove_comments=True):
-    simple_cmd_match = re.compile(r'\{(.*)\}')
+    simple_cmd_match = re.compile(r'\\([^\\]+?)\{(.*?)\}')
     graphics_cmd_match = re.compile(r'\\includegraphics\[.*?\]?\{(.*?)\}')
     if not os.path.isfile(input_filename):
         input_filename += '.tex'
@@ -25,27 +25,28 @@ def add_content_of_file(input_filename, output_file, output_folder, file_mapping
                     if not line.endswith('\n'):
                         line += '\n'
 
-                if '\\input{' in line:
-                    for import_filename in simple_cmd_match.findall(line):
-                        if not remove_comments:
-                            output_file.write('%' + '=' * 80 + '\n')
-                            output_file.write('%imported external file: ' + import_filename + '\n')
-                        print 'import external file content:', import_filename
-                        add_content_of_file(import_filename, output_file, output_folder, file_mapping,
-                                            remove_comments=remove_comments)
-                        if not remove_comments:
-                            output_file.write('%end external file: ' + import_filename + '\n')
-                            output_file.write('%' + '=' * 80 + '\n')
-                        print 'import external file content:', import_filename, '[DONE]'
-                elif '\includegraphics' in line:
+                if r'\input{' in line:
+                    for cmd, import_filename in simple_cmd_match.findall(line):
+                        if cmd == 'input':
+                            if not remove_comments:
+                                output_file.write('%' + '=' * 80 + '\n')
+                                output_file.write('%imported external file: ' + import_filename + '\n')
+                            print('import external file content:', import_filename)
+                            add_content_of_file(import_filename, output_file, output_folder, file_mapping,
+                                                remove_comments=remove_comments)
+                            if not remove_comments:
+                                output_file.write('%end external file: ' + import_filename + '\n')
+                                output_file.write('%' + '=' * 80 + '\n')
+                            print('import external file content:', import_filename, '[DONE]')
+                elif r'\includegraphics' in line:
                     for used_plot_filename in graphics_cmd_match.findall(line):
                         possible_filenames = [used_plot_filename + i for i in ['', '.pdf', '.png', '.eps']]
-                        print 'plot filename:',
+                        print('plot filename:', end=' ')
                         try:
                             plot_filename = list(filter(os.path.isfile, possible_filenames))[0]
-                            print plot_filename, '->',
+                            print(plot_filename, '->', end=' ')
                         except IndexError:
-                            print used_plot_filename, '[FILE NOT FOUND]'
+                            print(used_plot_filename, '[FILE NOT FOUND]')
                             continue
                         dest_filename = output_folder + os.path.basename(plot_filename)
                         dest_ext = '.' + dest_filename.rsplit('.', 1)[0]
@@ -60,29 +61,29 @@ def add_content_of_file(input_filename, output_file, output_folder, file_mapping
                                                                                                         '0') + dest_ext
                             dest_filename = tmp_filename
                             file_mapping[plot_filename] = dest_filename
-                        print '/'.join(dest_filename.rsplit('/', 2)[-2:]),
+                        print('/'.join(dest_filename.rsplit('/', 2)[-2:]), end=' ')
                         shutil.copy(plot_filename, dest_filename)
                         output_file.write(
                             line.replace(used_plot_filename, os.path.basename(dest_filename).replace(dest_ext, '')))
-                        print '[OK]'
-                elif '\\bibliography{' in line:
+                        print('[OK]')
+                elif r'\bibliography{' in line:
                     compiled_bibtex_file = input_filename.replace('.tex', '.bbl')
                     if not os.path.isfile(compiled_bibtex_file):
                         article_file = input_filename.replace('.tex', '')
                         if not os.path.isfile(input_filename.replace('.tex', '.aux')):
-                            print 'try compile paper:',
+                            print('try compile paper:', end=' ')
                             sys.stdout.flush()
                             if os.system('pdflatex ' + article_file) == 0:
-                                print '[OK]'
+                                print('[OK]')
 
                             else:
-                                print '[FAILED]'
-                        print 'try compile paper:',
+                                print('[FAILED]')
+                        print('try compile paper:', end=' ')
                         sys.stdout.flush()
                         if os.system('bibtex ' + article_file) == 0:
-                            print '[OK]'
+                            print('[OK]')
                         else:
-                            print '[FAILED]'
+                            print('[FAILED]')
                     try:
                         if not remove_comments:
                             output_file.write('%' + '=' * 80 + '\n')
@@ -95,7 +96,7 @@ def add_content_of_file(input_filename, output_file, output_folder, file_mapping
                             output_file.write('\n% end bibtex\n')
                             output_file.write('%' + '=' * 80 + '\n')
                     except:
-                        print traceback.format_exc()
+                        print(traceback.format_exc())
                 else:
                     output_file.write(line)
             elif not remove_comments:
@@ -119,8 +120,8 @@ def main():
             output_folder += '/'
         output_filename = output_folder + paper_filename
     remove_comments = options.rm_comments
-    print 'convert:', paper_filename
-    print 'outputfolder:', output_folder
+    print('convert:', paper_filename)
+    print('outputfolder:', output_folder)
     if os.path.isdir(output_folder) and options.folder_cleanup:
         shutil.rmtree(output_folder)
         os.makedirs(output_folder)
@@ -131,7 +132,7 @@ def main():
         add_content_of_file(paper_filename, outfile, output_folder, file_mapping, remove_comments=remove_comments)
     for fn in os.listdir(os.path.abspath(os.path.dirname(paper_filename))):
         if fn.endswith(('.sty', '.cls')):
-            print 'copy', fn, 'to', output_folder
+            print('copy', fn, 'to', output_folder)
             shutil.copy(fn, output_folder)
 
 
