@@ -2,14 +2,12 @@ from __future__ import print_function
 import sys
 import os
 import shutil
-import re
+import tex_utils
 import traceback
 from optparse import OptionParser
 
 
 def add_content_of_file(input_filename, output_file, output_folder, file_mapping, remove_comments=True):
-    simple_cmd_match = re.compile(r'\\([^\\]+?)\{(.*?)\}')
-    graphics_cmd_match = re.compile(r'\\includegraphics\[.*?\]?\{(.*?)\}')
     if not os.path.isfile(input_filename):
         input_filename += '.tex'
     with open(input_filename, 'r') as f:
@@ -26,7 +24,7 @@ def add_content_of_file(input_filename, output_file, output_folder, file_mapping
                         line += '\n'
 
                 if r'\input{' in line:
-                    for cmd, import_filename in simple_cmd_match.findall(line):
+                    for cmd, import_filename in tex_utils.simple_cmd_match.findall(line):
                         if cmd == 'input':
                             if not remove_comments:
                                 output_file.write('%' + '=' * 80 + '\n')
@@ -39,7 +37,7 @@ def add_content_of_file(input_filename, output_file, output_folder, file_mapping
                                 output_file.write('%' + '=' * 80 + '\n')
                             print('import external file content:', import_filename, '[DONE]')
                 elif r'\includegraphics' in line:
-                    for used_plot_filename in graphics_cmd_match.findall(line):
+                    for used_plot_filename in tex_utils.graphics_cmd_match.findall(line):
                         possible_filenames = [used_plot_filename + i for i in ['', '.pdf', '.png', '.eps']]
                         print('plot filename:', end=' ')
                         try:
