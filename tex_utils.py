@@ -2,6 +2,7 @@ import re
 
 simple_cmd_match = re.compile(r'\\([^\\]+?)\{(.*?)\}')
 graphics_cmd_match = re.compile(r'\\includegraphics\[.*?\]?\{(.*?)\}')
+begin_cmd_match = re.compile(r'\\begin{([^}]+?)}(?:(?:\[([^\]]+?)\])|.*)')
 
 
 class FileIter:

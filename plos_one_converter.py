@@ -68,6 +68,15 @@ def main():
                                 for l in input_file:
                                     line += l
                             line += '% ' + '*' * 80 + '\n'
+                    elif cmd == 'section':
+                        line = line.replace('\\section{', '\\section*{')
+                    elif cmd == 'subsection':
+                        line = line.replace('\\subsection{', '\\subsection*{')
+                    elif cmd == 'subsection':
+                        line = line.replace('\\subsubsection*{', '\\paragraph*{')
+                        line = line.replace('\\subsubsection{', '\\paragraph{')
+                    line = line.replace('Figure ', 'Fig. ')
+                    line = line.replace('Figure~', 'Fig.~')
                 outf.write(line)
     print('*' * 80)
     print('Found fig refs:')
@@ -95,7 +104,8 @@ def main():
                 fig_text += '\\thispagestyle{empty}\n'
                 fig_text += line
                 fig_ref = None
-                outf_text = line
+                fig_cmd, prop = tex_utils.begin_cmd_match(line)
+                outf_text = r'\begin{' + fig_cmd + '}\n'  # [h!]\n'
                 for line in f_iter.get_line():
                     strip_line = line.strip()
 
