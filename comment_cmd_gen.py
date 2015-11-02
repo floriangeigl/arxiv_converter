@@ -10,7 +10,7 @@ for name_tag in name_tags:
     print('\\newcounter{' + name_tag + 'counter}')
     print('\\DeclareRobustCommand{\\' + name_tag + '}[1]{\\textbf{/* #1 (' + name_tag + ') */}'
         '\\stepcounter{' + name_tag + 'counter}'
-        '\\typeout{LaTeX Warning: ' + name_tag + ' comment \\the' + name_tag + 'counter}}')
+        '\\typeout{LaTeX Warning: ' + name_tag + ' comment \\the' + name_tag + 'counter: #1 (line \\the\\inputlineno)}}')
 print('% comment toggle. change to \\iftrue to hide comments\n\\iffalse')
 for name_tag in name_tags:
     print('\t\\renewcommand{\\' + name_tag + '}[1]{}')
