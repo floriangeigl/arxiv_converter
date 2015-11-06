@@ -73,7 +73,7 @@ def main():
                     elif cmd == 'subsection':
                         line = line.replace('\\subsection{', '\\subsection*{')
                     elif cmd == 'subsection':
-                        line = line.replace('\\subsubsection*{', '\\paragraph*{')
+                        line = line.replace('\\subsubsection*{', '\\paragraph{')
                         line = line.replace('\\subsubsection{', '\\paragraph{')
                     line = line.replace('Figure ', 'Fig. ')
                     line = line.replace('Figure~', 'Fig.~')
