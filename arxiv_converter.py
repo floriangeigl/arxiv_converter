@@ -18,7 +18,7 @@ def replace_figure(orig_plot_fn, out_folder, file_mapping):
         print(orig_plot_fn, '[FILE NOT FOUND]')
         return None, None
     dest_filename = out_folder + os.path.basename(plot_filename)
-    dest_ext = '.' + dest_filename.rsplit('.', 1)[0]
+    dest_ext = '.' + dest_filename.rsplit('.', 1)[1]
     try:
         dest_filename = file_mapping[plot_filename]
     except KeyError:
