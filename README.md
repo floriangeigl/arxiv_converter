@@ -1,5 +1,5 @@
 # arXiv converter
-A tiny python2.7 script which tries to convert LaTex projects into arXiv-format. Suggestions are welcome. 
+A tiny python2.7 script which tries to convert LaTex projects into arXiv-format. Any suggestions are welcome. 
 
 ## Tasks:
 * The script creates an output folder,
@@ -19,4 +19,17 @@ python arxiv_converter.py -i main_tex_file.tex
         Flag. Do not include comments. Default: unset
     --folder-cleanup
         Flag. Remove output folder if it exists. Default: unset
-
+        
+## What's new:
+   * the script now supports dynamically generated figures. For example:
+   ```
+   \begin{figure}
+      \newcommand{\FigureRow}[1]{
+         \subfloat[#1]{\includegraphics[width=.48\columnwidth]{figures/#1/result_one.pdf}}
+         \subfloat[#1]{\includegraphics[width=.48\columnwidth]{figures/#1/result_two.pdf}}
+      }
+      \FigureRow{first_dataset}
+      \FigureRow{second_dataset}
+      \FigureRow{third_dataset}
+      ...
+   ```
