@@ -22,14 +22,15 @@ python arxiv_converter.py -i main_tex_file.tex
         
 ## What's new:
    * the script now supports dynamically generated figures. For example:
-   ```
-   \begin{figure}
-      \newcommand{\FigureRow}[1]{
-         \subfloat[#1]{\includegraphics[width=.48\columnwidth]{figures/#1/result_one.pdf}}
-         \subfloat[#1]{\includegraphics[width=.48\columnwidth]{figures/#1/result_two.pdf}}
-      }
-      \FigureRow{first_dataset}
-      \FigureRow{second_dataset}
-      \FigureRow{third_dataset}
-      ...
-   ```
+```
+\begin{figure}
+   \newcommand{\FigureRow}[1]{
+      \subfloat[#1]{\includegraphics[width=.48\linewidth]{figures/#1/result_one.pdf}}
+      \subfloat[#1]{\includegraphics[width=.48\linewidth]{figures/#1/result_two.pdf}}
+   }
+   \FigureRow{first_dataset}
+   \FigureRow{second_dataset}
+   \FigureRow{third_dataset}
+   ...
+\end{figure}
+```
