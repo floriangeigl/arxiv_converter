@@ -80,7 +80,8 @@ def main():
                 outf.write(line)
     print('*' * 80)
     print('Found fig refs:')
-    for key, val in sorted(ref_to_outpref.iteritems(), key=lambda x: int(x[1].replace(figureprefix, ''))):
+    for key, val in sorted(ref_to_outpref.items(), key=lambda x: int(x[
+                                                                     1].replace(figureprefix, ''))):
         print('\t', key, '->', val)
     print('*' * 80)
 
@@ -166,7 +167,7 @@ def main():
     # figures captions should be placed after the paragraph they were first referenced in the plos one latex document.
     # -> go over plos one file, find reference to figures and insert their captions after the paragraph.
     print('place figure captions')
-    outpref_to_ref = {val: key for key, val in ref_to_outpref.iteritems()}
+    outpref_to_ref = {val: key for key, val in ref_to_outpref.items()}
     inserted_figures = set()
     with open(output_filename, 'r') as f:
         with open(tmp_filename, 'w') as fo:

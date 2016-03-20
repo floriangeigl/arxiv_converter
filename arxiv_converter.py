@@ -43,7 +43,8 @@ def add_content_of_file(input_filename, output_file, output_folder, file_mapping
     f = tex_utils.FileIter(input_filename)
     for line in f.get_line():
         if r'\newcommand{' not in line and r'\renewcommand{' not in line:
-            for var_name, var_val in sorted(var_mapping.iteritems(), key=lambda x: len(x[0]), reverse=True):
+            for var_name, var_val in sorted(var_mapping.items(), key=lambda x:
+            len(x[0]), reverse=True):
                 if var_name not in complex_cmds:
                     line = line.replace(var_name, var_val)
         if not line.strip().startswith('%'):
@@ -130,7 +131,7 @@ def add_content_of_file(input_filename, output_file, output_folder, file_mapping
                             if line.strip() == '%':
                                 continue
                         if r'\newcommand{' not in line and r'\renewcommand{' not in line:
-                            for var_name, var_val in var_mapping.iteritems():
+                            for var_name, var_val in var_mapping.items():
                                 if var_name not in complex_cmds:
                                     line = line.replace(var_name, var_val)
                         output_file.write(line)
